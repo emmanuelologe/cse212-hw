@@ -1,5 +1,11 @@
 ﻿Console.WriteLine("\n======================\nSorting\n======================");
-Sorting.Run();
+Sorti
+
+
+
+
+
+ng.Run();
 
 Console.WriteLine("\n======================\nStandardDeviation\n======================");
 StandardDeviation.Run();
