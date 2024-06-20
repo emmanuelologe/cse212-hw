@@ -39,7 +39,19 @@ public static class ArraysTester {
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
 
-        return new double[0]; // replace this return statement with your own
+        // Step 1: I will Create an array to hold the result. The size of the array is 'length'.
+        double[] multiples = new double[length];
+        
+        // Step 2: I will be using a loop to fill the array with multiples of the given number.
+    
+        for (int i = 0; i < length; i++)
+        {
+            multiples[i] = number * (i + 1);
+        }
+    
+        // Step 3: Return the array containing the multiples.
+        return multiples;// replace this return statement with your own
+        
     }
     
     /// <summary>
@@ -56,6 +68,28 @@ public static class ArraysTester {
         // Remember: Using comments in your program, write down your process for solving this problem
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
+
+
+        // Step 1: Calculate the effective amount of rotation needed.
+        // Using modulus operation 
+        int effectiveAmount = amount % data.Count;
+        
+        // Step 2: If the effective amount is zero, no rotation is needed, so we can return early.
+        if (effectiveAmount == 0) return;
+        
+        // Step 3: Determine the split point where the list will be divided.
+        int splitPoint = data.Count - effectiveAmount;
+        
+        // Step 4: Split the list into two parts:
+        // - The part from 'splitPoint' to the end of the list.
+        // - The part from the beginning to 'splitPoint - 1'.
+        List<int> begining = data.GetRange(splitPoint, effectiveAmount);
+        List<int> end = data.GetRange(0, splitPoint);
+        
+        // Step 5: Clear the original list and add the tail followed by the head.
+        data.Clear();
+        data.AddRange(begining);
+        data.AddRange(end);
 
     }
 }
