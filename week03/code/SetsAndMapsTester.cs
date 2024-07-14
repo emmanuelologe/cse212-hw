@@ -75,6 +75,7 @@ public static class SetsAndMapsTester {
         maze.MoveRight();
         maze.ShowStatus(); // Should be at (6,6)
 
+
         // Problem 5: Earthquake
         // Sample Test Cases (may not be comprehensive) 
         Console.WriteLine("\n=========== Earthquake TESTS ===========");
@@ -111,6 +112,21 @@ public static class SetsAndMapsTester {
         // To display the pair correctly use something like:
         // Console.WriteLine($"{word} & {pair}");
         // Each pair of words should displayed on its own line.
+        HashSet<string> wordSet = new HashSet<string>();
+
+        foreach (string word in words)
+        {
+            string reversedWord = new string(word.ToCharArray().Reverse().ToArray());
+
+            if (wordSet.Contains(reversedWord))
+            {
+                Console.WriteLine($"{reversedWord} & {word}");
+            }
+            else
+            {
+                wordSet.Add(word);
+            }
+        }
     }
 
     /// <summary>
@@ -131,7 +147,19 @@ public static class SetsAndMapsTester {
         var degrees = new Dictionary<string, int>();
         foreach (var line in File.ReadLines(filename)) {
             var fields = line.Split(",");
-            // Todo Problem 2 - ADD YOUR CODE HERE
+            if (fields.Length >= 5)  
+            {
+                var degree = fields[3].Trim();  
+
+                if (degrees.ContainsKey(degree))
+                {
+                    degrees[degree]++;
+                }
+                else
+                {
+                    degrees[degree] = 1;
+                }
+            }
         }
 
         return degrees;
@@ -158,14 +186,138 @@ public static class SetsAndMapsTester {
     /// #############
     private static bool IsAnagram(string word1, string word2) {
         // Todo Problem 3 - ADD YOUR CODE HERE
-        return false;
+        Dictionary<char, int> BuildCharCountDictionary(string word)
+        {
+            var charCount = new Dictionary<char, int>();
+            foreach (var ch in word.ToLower())
+            {
+                if (ch != ' ')
+                {
+                    if (charCount.ContainsKey(ch))
+                    {
+                        charCount[ch]++;
+                    }
+                    else
+                    {
+                        charCount[ch] = 1;
+                    }
+                }
+            }
+            return charCount;
+        }
+
+        var charCount1 = BuildCharCountDictionary(word1);
+        var charCount2 = BuildCharCountDictionary(word2);
+
+        if (charCount1.Count != charCount2.Count)
+        {
+            return false;
+        }
+
+        foreach (var kvp in charCount1)
+        {
+            if (!charCount2.ContainsKey(kvp.Key) || charCount2[kvp.Key] != kvp.Value)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
+    
 
     /// <summary>
     /// Sets up the maze dictionary for problem 4
     /// </summary>
-    private static Dictionary<ValueTuple<int, int>, bool[]> SetupMazeMap() {
-        Dictionary<ValueTuple<int, int>, bool[]> map = new() {
+    public class Maze
+{
+    private Dictionary<(int, int), bool[]> map;
+    private (int, int) position;
+
+    public Maze(Dictionary<(int, int), bool[]> map)
+    {
+        this.map = map;
+        // Assume the starting position is always (1, 1)
+        this.position = (1, 1);
+    }
+
+    public void MoveLeft()
+    {
+        if (map[position][0]) // Check if left movement is allowed
+        {
+            var newPosition = (position.Item1 - 1, position.Item2);
+            if (map.ContainsKey(newPosition))
+            {
+                position = newPosition;
+                Console.WriteLine("Moved left");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Error: Cannot move left");
+        }
+    }
+
+    public void MoveRight()
+    {
+        if (map[position][1]) // Check if right movement is allowed
+        {
+            var newPosition = (position.Item1 + 1, position.Item2);
+            if (map.ContainsKey(newPosition))
+            {
+                position = newPosition;
+                Console.WriteLine("Moved right");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Error: Cannot move right");
+        }
+    }
+
+    public void MoveUp()
+    {
+        if (map[position][2]) // Check if up movement is allowed
+        {
+            var newPosition = (position.Item1, position.Item2 - 1);
+            if (map.ContainsKey(newPosition))
+            {
+                position = newPosition;
+                Console.WriteLine("Moved up");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Error: Cannot move up");
+        }
+    }
+
+    public void MoveDown()
+    {
+        if (map[position][3]) // Check if down movement is allowed
+        {
+            var newPosition = (position.Item1, position.Item2 + 1);
+            if (map.ContainsKey(newPosition))
+            {
+                position = newPosition;
+                Console.WriteLine("Moved down");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Error: Cannot move down");
+        }
+    }
+
+    public void ShowStatus()
+    {
+        Console.WriteLine($"Current position: {position}");
+    }
+    
+    private static Dictionary<(int, int), bool[]> SetupMazeMap()
+    {
+        Dictionary<(int, int), bool[]> map = new()
+        {
             { (1, 1), new[] { false, true, false, true } },
             { (1, 2), new[] { false, true, true, false } },
             { (1, 3), new[] { false, false, false, false } },
@@ -205,7 +357,7 @@ public static class SetsAndMapsTester {
         };
         return map;
     }
-
+}
     /// <summary>
     /// This function will read JSON (Javascript Object Notation) data from the 
     /// United States Geological Service (USGS) consisting of earthquake data.
